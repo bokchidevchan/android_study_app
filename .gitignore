@@ -14,6 +14,12 @@
 .cxx
 local.properties
 
+# Build outputs - all modules
+**/build/
+**/release/
+*.apk
+*.aab
+
 # Security - API Keys & Secrets
 *.jks
 *.keystore
@@ -38,8 +44,27 @@ service-account*.json
 *.ipr
 *.iws
 
-# Build outputs
-app/build/
-app/release/
-*.apk
-*.aab
+# Kotlin
+*.kotlin_module
+
+# Gradle
+.gradle/
+gradle-app.setting
+!gradle-wrapper.jar
+gradle/build
+
+# Test outputs
+**/test-results/
+**/reports/
+
+# Kover coverage
+**/kover/
+
+# Generated files
+**/generated/
+**/intermediates/
+**/tmp/
+**/.transforms/
+
+# Local configuration
+*.local

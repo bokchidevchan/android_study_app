@@ -20,5 +20,20 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "Android-Study-App"
+
 include(":app")
- 
+
+// Core modules
+include(":core:core-common")
+include(":core:core-network")
+include(":core:core-ui")
+include(":core:core-testing")
+
+// Domain modules
+include(":domain:domain-market")
+
+// Data modules
+include(":data:data-market")
+
+// Feature modules
+include(":feature:feature-market")
