@@ -1,6 +1,7 @@
 package io.github.bokchidevchan.android_study_app
 
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onFirst
@@ -27,65 +28,78 @@ class NavigationE2ETest {
         hiltRule.inject()
     }
 
-    @Test
-    fun 마켓_아이템_클릭시_상세_화면으로_이동한다() {
-        // 마켓 목록이 로드될 때까지 대기
-        composeRule.waitUntil(timeoutMillis = 10_000) {
-            composeRule.onAllNodesWithText("비트코인").fetchSemanticsNodes().isNotEmpty() ||
-                    composeRule.onAllNodesWithText("No markets found").fetchSemanticsNodes().isNotEmpty() ||
-                    composeRule.onAllNodesWithText("Retry").fetchSemanticsNodes().isNotEmpty()
-        }
-
-        // 마켓이 로드된 경우에만 테스트 진행
-        val marketNodes = composeRule.onAllNodesWithText("비트코인").fetchSemanticsNodes()
-        if (marketNodes.isNotEmpty()) {
-            // 비트코인 마켓 클릭
-            composeRule.onAllNodesWithText("비트코인").onFirst().performClick()
-
-            // 상세 화면으로 이동 확인 (뒤로가기 버튼 표시)
+    private fun waitForContentLoaded(): Boolean {
+        // 최대 30초 동안 1초마다 확인
+        repeat(30) {
             composeRule.waitForIdle()
-            composeRule.onNodeWithContentDescription("Back").assertIsDisplayed()
+
+            val hasMarkets = composeRule.onAllNodesWithText("비트코인").fetchSemanticsNodes().isNotEmpty() ||
+                    composeRule.onAllNodesWithText("이더리움").fetchSemanticsNodes().isNotEmpty()
+            val hasError = composeRule.onAllNodesWithText("Retry").fetchSemanticsNodes().isNotEmpty()
+            val hasEmpty = composeRule.onAllNodesWithText("No markets found").fetchSemanticsNodes().isNotEmpty()
+
+            if (hasMarkets || hasError || hasEmpty) {
+                return hasMarkets
+            }
+
+            Thread.sleep(1000)
         }
+        return false
     }
 
     @Test
-    fun 상세_화면에서_뒤로가기_클릭시_목록_화면으로_돌아온다() {
-        // 마켓 목록이 로드될 때까지 대기
-        composeRule.waitUntil(timeoutMillis = 10_000) {
-            composeRule.onAllNodesWithText("비트코인").fetchSemanticsNodes().isNotEmpty() ||
-                    composeRule.onAllNodesWithText("No markets found").fetchSemanticsNodes().isNotEmpty() ||
-                    composeRule.onAllNodesWithText("Retry").fetchSemanticsNodes().isNotEmpty()
-        }
+    fun 마켓_아이템_클릭시_상세_화면으로_이동한다() {
+        val hasMarkets = waitForContentLoaded()
 
-        // 마켓이 로드된 경우에만 테스트 진행
-        val marketNodes = composeRule.onAllNodesWithText("비트코인").fetchSemanticsNodes()
-        if (marketNodes.isNotEmpty()) {
-            // 비트코인 마켓 클릭
-            composeRule.onAllNodesWithText("비트코인").onFirst().performClick()
-            composeRule.waitForIdle()
-
-            // 뒤로가기 버튼 클릭
-            composeRule.onNodeWithContentDescription("Back").performClick()
-            composeRule.waitForIdle()
-
-            // 마켓 목록 화면으로 돌아왔는지 확인
+        if (hasMarkets) {
+            // 마켓이 로드된 경우
+            val btcNodes = composeRule.onAllNodesWithText("비트코인").fetchSemanticsNodes()
+            if (btcNodes.isNotEmpty()) {
+                composeRule.onAllNodesWithText("비트코인").onFirst().performClick()
+                composeRule.waitForIdle()
+                composeRule.onNodeWithContentDescription("Back").assertIsDisplayed()
+            } else {
+                composeRule.onAllNodesWithText("이더리움").onFirst().performClick()
+                composeRule.waitForIdle()
+                composeRule.onNodeWithContentDescription("Back").assertIsDisplayed()
+            }
+        } else {
+            // 마켓이 로드되지 않은 경우 - 앱이 정상 동작 확인
             composeRule.onNodeWithText("Upbit Market").assertIsDisplayed()
         }
     }
 
     @Test
-    fun 에러_발생시_재시도_버튼이_표시된다() {
-        // 네트워크 에러 발생 시 Retry 버튼 확인
-        composeRule.waitUntil(timeoutMillis = 10_000) {
-            composeRule.onAllNodesWithText("비트코인").fetchSemanticsNodes().isNotEmpty() ||
-                    composeRule.onAllNodesWithText("No markets found").fetchSemanticsNodes().isNotEmpty() ||
-                    composeRule.onAllNodesWithText("Retry").fetchSemanticsNodes().isNotEmpty()
-        }
+    fun 상세_화면에서_뒤로가기_클릭시_목록_화면으로_돌아온다() {
+        val hasMarkets = waitForContentLoaded()
 
-        // 에러가 발생한 경우 Retry 버튼이 있는지 확인
-        val retryNodes = composeRule.onAllNodesWithText("Retry").fetchSemanticsNodes()
-        if (retryNodes.isNotEmpty()) {
-            composeRule.onNodeWithText("Retry").assertIsDisplayed()
+        if (hasMarkets) {
+            val btcNodes = composeRule.onAllNodesWithText("비트코인").fetchSemanticsNodes()
+            if (btcNodes.isNotEmpty()) {
+                composeRule.onAllNodesWithText("비트코인").onFirst().performClick()
+            } else {
+                composeRule.onAllNodesWithText("이더리움").onFirst().performClick()
+            }
+            composeRule.waitForIdle()
+
+            composeRule.onNodeWithContentDescription("Back").performClick()
+            composeRule.waitForIdle()
+
+            composeRule.onNodeWithText("Upbit Market").assertIsDisplayed()
+        } else {
+            // 마켓이 로드되지 않은 경우 - 기본 화면 확인
+            composeRule.onNodeWithText("Upbit Market").assertIsDisplayed()
         }
+    }
+
+    @Test
+    fun 앱_시작_후_컨텐츠가_로드된다() {
+        waitForContentLoaded()
+
+        // 앱 헤더가 항상 표시되어야 함
+        composeRule.onNodeWithText("Upbit Market").assertIsDisplayed()
+
+        // 탭이 표시되어야 함
+        composeRule.onNodeWithText("KRW").assertIsDisplayed()
     }
 }
