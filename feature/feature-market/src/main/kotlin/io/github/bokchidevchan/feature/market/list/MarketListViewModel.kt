@@ -2,6 +2,7 @@ package io.github.bokchidevchan.feature.market.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.bokchidevchan.core.common.MarketType
 import io.github.bokchidevchan.domain.market.usecase.GetMarketsUseCase
 import io.github.bokchidevchan.domain.market.usecase.GetTickerUseCase
@@ -10,8 +11,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MarketListViewModel(
+@HiltViewModel
+class MarketListViewModel @Inject constructor(
     private val getMarketsUseCase: GetMarketsUseCase,
     private val getTickerUseCase: GetTickerUseCase
 ) : ViewModel() {

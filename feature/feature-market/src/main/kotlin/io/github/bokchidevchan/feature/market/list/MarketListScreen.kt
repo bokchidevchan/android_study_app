@@ -40,13 +40,13 @@ import io.github.bokchidevchan.core.ui.theme.EvenColor
 import io.github.bokchidevchan.core.ui.theme.FallColor
 import io.github.bokchidevchan.core.ui.theme.RiseColor
 import io.github.bokchidevchan.domain.market.entity.Change
-import org.koin.androidx.compose.koinViewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MarketListScreen(
     onMarketClick: (String) -> Unit,
-    viewModel: MarketListViewModel = koinViewModel()
+    viewModel: MarketListViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 

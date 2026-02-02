@@ -18,8 +18,7 @@ dependencies {
     implementation(project(":core:core-common"))
 
     // DI
-    implementation(platform(libs.koin.bom))
-    implementation(libs.koin.core)
+    implementation(libs.javax.inject)
 
     // Test
     testImplementation(project(":core:core-testing"))

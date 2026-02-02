@@ -8,8 +8,9 @@ import io.github.bokchidevchan.domain.market.entity.Market
 import io.github.bokchidevchan.domain.market.entity.Orderbook
 import io.github.bokchidevchan.domain.market.entity.Ticker
 import io.github.bokchidevchan.domain.market.repository.MarketRepository
+import javax.inject.Inject
 
-class MarketRepositoryImpl(
+class MarketRepositoryImpl @Inject constructor(
     private val upbitApi: UpbitApi
 ) : MarketRepository {
 

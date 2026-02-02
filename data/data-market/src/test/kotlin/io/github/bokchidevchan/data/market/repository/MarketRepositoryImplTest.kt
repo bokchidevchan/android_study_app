@@ -1,6 +1,6 @@
 package io.github.bokchidevchan.data.market.repository
 
-import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import retrofit2.converter.kotlinx.serialization.asConverterFactory
 import io.github.bokchidevchan.core.testing.MockWebServerRule
 import io.github.bokchidevchan.core.testing.TestData
 import io.github.bokchidevchan.data.market.api.UpbitApi

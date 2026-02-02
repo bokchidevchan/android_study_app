@@ -45,13 +45,13 @@ import io.github.bokchidevchan.core.ui.theme.RiseColorLight
 import io.github.bokchidevchan.domain.market.entity.Change
 import io.github.bokchidevchan.domain.market.entity.OrderbookUnit
 import io.github.bokchidevchan.domain.market.entity.Ticker
-import org.koin.androidx.compose.koinViewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MarketDetailScreen(
     onBackClick: () -> Unit,
-    viewModel: MarketDetailViewModel = koinViewModel()
+    viewModel: MarketDetailViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
