@@ -15,9 +15,9 @@ import org.junit.Assert.*
  */
 @RunWith(AndroidJUnit4::class)
 class ExampleInstrumentedTest {
+    /** 앱 컨텍스트를 사용할 수 있어야 한다 */
     @Test
     fun useAppContext() {
-        // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
         assertEquals("io.github.bokchidevchan.android_study_app", appContext.packageName)
     }

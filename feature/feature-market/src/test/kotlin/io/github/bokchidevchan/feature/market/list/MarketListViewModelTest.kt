@@ -64,7 +64,7 @@ class MarketListViewModelTest {
     }
 
     @Test
-    fun `initial load should fetch markets and tickers`() = runTest {
+    fun `초기 로드 시 마켓과 티커를 가져와야 한다`() = runTest {
         coEvery { getMarketsUseCase(MarketType.KRW) } returns Result.success(testMarkets)
         coEvery { getTickerUseCase(any<List<String>>()) } returns Result.success(testTickers)
 
@@ -79,7 +79,7 @@ class MarketListViewModelTest {
     }
 
     @Test
-    fun `onTabSelected should change tab and reload markets`() = runTest {
+    fun `onTabSelected 호출 시 탭을 변경하고 마켓을 다시 로드해야 한다`() = runTest {
         coEvery { getMarketsUseCase(any()) } returns Result.success(testMarkets)
         coEvery { getTickerUseCase(any<List<String>>()) } returns Result.success(testTickers)
 
@@ -96,7 +96,7 @@ class MarketListViewModelTest {
     }
 
     @Test
-    fun `error should set errorMessage`() = runTest {
+    fun `에러 발생 시 errorMessage를 설정해야 한다`() = runTest {
         val exception = AppException.NetworkException("Network error")
         coEvery { getMarketsUseCase(any()) } returns Result.error(exception)
 
@@ -110,7 +110,7 @@ class MarketListViewModelTest {
     }
 
     @Test
-    fun `retry should clear error and reload`() = runTest {
+    fun `retry 호출 시 에러를 지우고 다시 로드해야 한다`() = runTest {
         val exception = AppException.NetworkException("Network error")
         coEvery { getMarketsUseCase(any()) } returnsMany listOf(
             Result.error(exception),
@@ -138,7 +138,7 @@ class MarketListViewModelTest {
     }
 
     @Test
-    fun `refresh should set isRefreshing`() = runTest {
+    fun `refresh 호출 시 isRefreshing을 설정해야 한다`() = runTest {
         coEvery { getMarketsUseCase(any()) } returns Result.success(testMarkets)
         coEvery { getTickerUseCase(any<List<String>>()) } returns Result.success(testTickers)
 
@@ -163,7 +163,7 @@ class MarketListViewModelTest {
     }
 
     @Test
-    fun `empty markets should not fetch tickers`() = runTest {
+    fun `빈 마켓일 경우 티커를 가져오지 않아야 한다`() = runTest {
         coEvery { getMarketsUseCase(any()) } returns Result.success(emptyList())
 
         val viewModel = MarketListViewModel(getMarketsUseCase, getTickerUseCase)

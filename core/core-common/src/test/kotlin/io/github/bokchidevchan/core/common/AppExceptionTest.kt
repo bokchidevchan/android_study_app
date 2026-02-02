@@ -8,7 +8,7 @@ import org.junit.Test
 class AppExceptionTest {
 
     @Test
-    fun `NetworkException should have default message`() {
+    fun `NetworkException은 기본 메시지를 가져야 한다`() {
         val exception = AppException.NetworkException()
 
         assertEquals("Network connection error", exception.message)
@@ -16,7 +16,7 @@ class AppExceptionTest {
     }
 
     @Test
-    fun `NetworkException should accept custom message and cause`() {
+    fun `NetworkException은 커스텀 메시지와 원인을 받을 수 있어야 한다`() {
         val cause = RuntimeException("test")
         val exception = AppException.NetworkException("Custom message", cause)
 
@@ -25,7 +25,7 @@ class AppExceptionTest {
     }
 
     @Test
-    fun `TimeoutException should have default message`() {
+    fun `TimeoutException은 기본 메시지를 가져야 한다`() {
         val exception = AppException.TimeoutException()
 
         assertEquals("Request timed out", exception.message)
@@ -33,7 +33,7 @@ class AppExceptionTest {
     }
 
     @Test
-    fun `TimeoutException should accept custom message and cause`() {
+    fun `TimeoutException은 커스텀 메시지와 원인을 받을 수 있어야 한다`() {
         val cause = RuntimeException("test")
         val exception = AppException.TimeoutException("Custom timeout", cause)
 
@@ -42,7 +42,7 @@ class AppExceptionTest {
     }
 
     @Test
-    fun `ServerException should contain error code`() {
+    fun `ServerException은 에러 코드를 포함해야 한다`() {
         val exception = AppException.ServerException(404)
 
         assertEquals(404, exception.code)
@@ -50,7 +50,7 @@ class AppExceptionTest {
     }
 
     @Test
-    fun `ServerException should accept custom message`() {
+    fun `ServerException은 커스텀 메시지를 받을 수 있어야 한다`() {
         val exception = AppException.ServerException(500, "Internal server error")
 
         assertEquals(500, exception.code)
@@ -58,7 +58,7 @@ class AppExceptionTest {
     }
 
     @Test
-    fun `UnknownException should have default message`() {
+    fun `UnknownException은 기본 메시지를 가져야 한다`() {
         val exception = AppException.UnknownException()
 
         assertEquals("Unknown error", exception.message)
@@ -66,7 +66,7 @@ class AppExceptionTest {
     }
 
     @Test
-    fun `UnknownException should accept custom message and cause`() {
+    fun `UnknownException은 커스텀 메시지와 원인을 받을 수 있어야 한다`() {
         val cause = RuntimeException("test")
         val exception = AppException.UnknownException("Something went wrong", cause)
 
@@ -75,7 +75,7 @@ class AppExceptionTest {
     }
 
     @Test
-    fun `AppException subtypes should be distinguishable`() {
+    fun `AppException 하위 타입은 구분 가능해야 한다`() {
         val networkException = AppException.NetworkException()
         val timeoutException = AppException.TimeoutException()
         val serverException = AppException.ServerException(500)

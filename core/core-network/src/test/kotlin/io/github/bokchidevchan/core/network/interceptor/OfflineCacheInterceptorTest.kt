@@ -28,7 +28,7 @@ class OfflineCacheInterceptorTest {
     }
 
     @Test
-    fun `interceptor should not modify request when network is available`() {
+    fun `인터셉터는 네트워크가 사용 가능할 때 요청을 수정하지 않아야 한다`() {
         val client = OkHttpClient.Builder()
             .addInterceptor(OfflineCacheInterceptor { isNetworkAvailable })
             .build()
@@ -48,7 +48,7 @@ class OfflineCacheInterceptorTest {
     }
 
     @Test
-    fun `interceptor should add max-stale when network is unavailable`() {
+    fun `인터셉터는 네트워크가 사용 불가능할 때 max-stale을 추가해야 한다`() {
         isNetworkAvailable = false
 
         val client = OkHttpClient.Builder()

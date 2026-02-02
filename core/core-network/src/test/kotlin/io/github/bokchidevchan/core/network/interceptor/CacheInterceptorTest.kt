@@ -32,7 +32,7 @@ class CacheInterceptorTest {
     }
 
     @Test
-    fun `interceptor should add Cache-Control header to response`() {
+    fun `인터셉터는 응답에 Cache-Control 헤더를 추가해야 한다`() {
         mockWebServer.enqueue(
             MockResponse()
                 .setResponseCode(200)
@@ -51,7 +51,7 @@ class CacheInterceptorTest {
     }
 
     @Test
-    fun `interceptor should remove Pragma header from response`() {
+    fun `인터셉터는 응답에서 Pragma 헤더를 제거해야 한다`() {
         mockWebServer.enqueue(
             MockResponse()
                 .setResponseCode(200)

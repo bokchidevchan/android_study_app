@@ -75,7 +75,7 @@ class MarketDetailViewModelTest {
     }
 
     @Test
-    fun `initial load should fetch ticker and orderbook`() = runTest {
+    fun `초기 로드 시 티커와 호가창을 가져와야 한다`() = runTest {
         coEvery { getTickerUseCase(any<String>()) } returns Result.success(testTicker)
         coEvery { getOrderbookUseCase(any()) } returns Result.success(testOrderbook)
 
@@ -92,7 +92,7 @@ class MarketDetailViewModelTest {
     }
 
     @Test
-    fun `error should set errorMessage when ticker fails`() = runTest {
+    fun `티커 실패 시 errorMessage를 설정해야 한다`() = runTest {
         val exception = AppException.NetworkException("Network error")
         coEvery { getTickerUseCase(any<String>()) } returns Result.error(exception)
         coEvery { getOrderbookUseCase(any()) } returns Result.success(testOrderbook)
@@ -107,7 +107,7 @@ class MarketDetailViewModelTest {
     }
 
     @Test
-    fun `should not show error when only orderbook fails`() = runTest {
+    fun `호가창만 실패할 경우 에러를 표시하지 않아야 한다`() = runTest {
         val exception = AppException.NetworkException("Network error")
         coEvery { getTickerUseCase(any<String>()) } returns Result.success(testTicker)
         coEvery { getOrderbookUseCase(any()) } returns Result.error(exception)
@@ -123,7 +123,7 @@ class MarketDetailViewModelTest {
     }
 
     @Test
-    fun `retry should clear error and reload`() = runTest {
+    fun `retry 호출 시 에러를 지우고 다시 로드해야 한다`() = runTest {
         val exception = AppException.NetworkException("Network error")
         coEvery { getTickerUseCase(any<String>()) } returnsMany listOf(
             Result.error(exception),

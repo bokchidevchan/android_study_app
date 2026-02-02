@@ -8,7 +8,7 @@ import org.junit.Test
 class OrderbookMapperTest {
 
     @Test
-    fun `toEntity should map OrderbookDto to Orderbook`() {
+    fun `toEntity는 OrderbookDto를 Orderbook으로 매핑해야 한다`() {
         val dto = OrderbookDto(
             market = "KRW-BTC",
             timestamp = 1702641600000,
@@ -34,7 +34,7 @@ class OrderbookMapperTest {
     }
 
     @Test
-    fun `toEntity should map OrderbookUnitDto correctly`() {
+    fun `toEntity는 OrderbookUnitDto를 올바르게 매핑해야 한다`() {
         val dto = OrderbookUnitDto(
             askPrice = 51100000.0,
             bidPrice = 50900000.0,
@@ -51,7 +51,7 @@ class OrderbookMapperTest {
     }
 
     @Test
-    fun `toEntities should map list of OrderbookDto to list of Orderbook`() {
+    fun `toEntities는 OrderbookDto 리스트를 Orderbook 리스트로 매핑해야 한다`() {
         val dtos = listOf(
             OrderbookDto(market = "KRW-BTC", timestamp = 1, totalAskSize = 0.0, totalBidSize = 0.0),
             OrderbookDto(market = "KRW-ETH", timestamp = 2, totalAskSize = 0.0, totalBidSize = 0.0)

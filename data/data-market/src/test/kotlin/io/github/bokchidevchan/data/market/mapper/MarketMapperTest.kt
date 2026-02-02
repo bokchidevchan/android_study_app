@@ -7,7 +7,7 @@ import org.junit.Test
 class MarketMapperTest {
 
     @Test
-    fun `toEntity should map MarketDto to Market`() {
+    fun `toEntity는 MarketDto를 Market으로 매핑해야 한다`() {
         val dto = MarketDto(
             market = "KRW-BTC",
             koreanName = "비트코인",
@@ -22,7 +22,7 @@ class MarketMapperTest {
     }
 
     @Test
-    fun `toEntities should map list of MarketDto to list of Market`() {
+    fun `toEntities는 MarketDto 리스트를 Market 리스트로 매핑해야 한다`() {
         val dtos = listOf(
             MarketDto("KRW-BTC", "비트코인", "Bitcoin"),
             MarketDto("KRW-ETH", "이더리움", "Ethereum")

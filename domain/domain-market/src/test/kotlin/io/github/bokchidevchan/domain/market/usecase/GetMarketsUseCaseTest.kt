@@ -32,7 +32,7 @@ class GetMarketsUseCaseTest {
     }
 
     @Test
-    fun `invoke without filter should return all markets`() = runTest {
+    fun `필터 없이 호출하면 모든 마켓을 반환해야 한다`() = runTest {
         coEvery { marketRepository.getMarkets() } returns Result.success(testMarkets)
 
         val result = getMarketsUseCase()
@@ -42,7 +42,7 @@ class GetMarketsUseCaseTest {
     }
 
     @Test
-    fun `invoke with KRW filter should return only KRW markets`() = runTest {
+    fun `KRW 필터로 호출하면 KRW 마켓만 반환해야 한다`() = runTest {
         coEvery { marketRepository.getMarkets() } returns Result.success(testMarkets)
 
         val result = getMarketsUseCase(MarketType.KRW)
@@ -53,7 +53,7 @@ class GetMarketsUseCaseTest {
     }
 
     @Test
-    fun `invoke with BTC filter should return only BTC markets`() = runTest {
+    fun `BTC 필터로 호출하면 BTC 마켓만 반환해야 한다`() = runTest {
         coEvery { marketRepository.getMarkets() } returns Result.success(testMarkets)
 
         val result = getMarketsUseCase(MarketType.BTC)
@@ -64,7 +64,7 @@ class GetMarketsUseCaseTest {
     }
 
     @Test
-    fun `invoke with USDT filter should return only USDT markets`() = runTest {
+    fun `USDT 필터로 호출하면 USDT 마켓만 반환해야 한다`() = runTest {
         coEvery { marketRepository.getMarkets() } returns Result.success(testMarkets)
 
         val result = getMarketsUseCase(MarketType.USDT)
@@ -75,7 +75,7 @@ class GetMarketsUseCaseTest {
     }
 
     @Test
-    fun `invoke should propagate repository error`() = runTest {
+    fun `호출 시 레포지토리 에러를 전파해야 한다`() = runTest {
         val exception = AppException.NetworkException()
         coEvery { marketRepository.getMarkets() } returns Result.error(exception)
 

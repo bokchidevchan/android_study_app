@@ -42,7 +42,7 @@ class MarketRepositoryImplTest {
     }
 
     @Test
-    fun `getMarkets should return markets on success`() = runTest {
+    fun `getMarkets는 성공 시 마켓 목록을 반환해야 한다`() = runTest {
         mockWebServerRule.mockWebServer.enqueue(
             MockResponse()
                 .setResponseCode(200)
@@ -57,7 +57,7 @@ class MarketRepositoryImplTest {
     }
 
     @Test
-    fun `getMarkets should return error on failure`() = runTest {
+    fun `getMarkets는 실패 시 에러를 반환해야 한다`() = runTest {
         mockWebServerRule.mockWebServer.enqueue(
             MockResponse().setResponseCode(500)
         )
@@ -68,7 +68,7 @@ class MarketRepositoryImplTest {
     }
 
     @Test
-    fun `getTicker should return tickers on success`() = runTest {
+    fun `getTicker는 성공 시 티커 목록을 반환해야 한다`() = runTest {
         mockWebServerRule.mockWebServer.enqueue(
             MockResponse()
                 .setResponseCode(200)
@@ -84,7 +84,7 @@ class MarketRepositoryImplTest {
     }
 
     @Test
-    fun `getTicker should join multiple market codes`() = runTest {
+    fun `getTicker는 여러 마켓 코드를 조인해야 한다`() = runTest {
         mockWebServerRule.mockWebServer.enqueue(
             MockResponse()
                 .setResponseCode(200)
@@ -100,7 +100,7 @@ class MarketRepositoryImplTest {
     }
 
     @Test
-    fun `getOrderbook should return orderbook on success`() = runTest {
+    fun `getOrderbook은 성공 시 호가창을 반환해야 한다`() = runTest {
         mockWebServerRule.mockWebServer.enqueue(
             MockResponse()
                 .setResponseCode(200)

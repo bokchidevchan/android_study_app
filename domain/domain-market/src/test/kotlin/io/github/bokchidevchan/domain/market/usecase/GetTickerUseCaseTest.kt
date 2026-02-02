@@ -48,7 +48,7 @@ class GetTickerUseCaseTest {
     }
 
     @Test
-    fun `invoke with list should return tickers for all markets`() = runTest {
+    fun `리스트로 호출하면 모든 마켓의 티커를 반환해야 한다`() = runTest {
         val marketCodes = listOf("KRW-BTC", "KRW-ETH")
         coEvery { marketRepository.getTicker(marketCodes) } returns Result.success(listOf(testTicker))
 
@@ -60,7 +60,7 @@ class GetTickerUseCaseTest {
     }
 
     @Test
-    fun `invoke with single code should return single ticker`() = runTest {
+    fun `단일 코드로 호출하면 단일 티커를 반환해야 한다`() = runTest {
         coEvery { marketRepository.getTicker(listOf("KRW-BTC")) } returns Result.success(listOf(testTicker))
 
         val result = getTickerUseCase("KRW-BTC")
@@ -70,7 +70,7 @@ class GetTickerUseCaseTest {
     }
 
     @Test
-    fun `invoke with single code should return null when ticker not found`() = runTest {
+    fun `단일 코드로 호출 시 티커를 찾지 못하면 null을 반환해야 한다`() = runTest {
         coEvery { marketRepository.getTicker(listOf("KRW-BTC")) } returns Result.success(emptyList())
 
         val result = getTickerUseCase("KRW-BTC")
@@ -80,7 +80,7 @@ class GetTickerUseCaseTest {
     }
 
     @Test
-    fun `invoke should propagate repository error`() = runTest {
+    fun `호출 시 레포지토리 에러를 전파해야 한다`() = runTest {
         val exception = AppException.NetworkException()
         coEvery { marketRepository.getTicker(any()) } returns Result.error(exception)
 

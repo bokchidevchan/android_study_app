@@ -41,7 +41,7 @@ class GetOrderbookUseCaseTest {
     }
 
     @Test
-    fun `invoke should return orderbook for market`() = runTest {
+    fun `호출하면 마켓의 호가창을 반환해야 한다`() = runTest {
         coEvery { marketRepository.getOrderbook(listOf("KRW-BTC")) } returns Result.success(listOf(testOrderbook))
 
         val result = getOrderbookUseCase("KRW-BTC")
@@ -51,7 +51,7 @@ class GetOrderbookUseCaseTest {
     }
 
     @Test
-    fun `invoke should return null when orderbook not found`() = runTest {
+    fun `호가창을 찾지 못하면 null을 반환해야 한다`() = runTest {
         coEvery { marketRepository.getOrderbook(listOf("KRW-BTC")) } returns Result.success(emptyList())
 
         val result = getOrderbookUseCase("KRW-BTC")
@@ -61,7 +61,7 @@ class GetOrderbookUseCaseTest {
     }
 
     @Test
-    fun `invoke should propagate repository error`() = runTest {
+    fun `호출 시 레포지토리 에러를 전파해야 한다`() = runTest {
         val exception = AppException.NetworkException()
         coEvery { marketRepository.getOrderbook(any()) } returns Result.error(exception)
 

@@ -8,7 +8,7 @@ import org.junit.Test
 class TickerMapperTest {
 
     @Test
-    fun `toEntity should map TickerDto to Ticker`() {
+    fun `toEntity는 TickerDto를 Ticker로 매핑해야 한다`() {
         val dto = TickerDto(
             market = "KRW-BTC",
             tradePrice = 51000000.0,
@@ -39,7 +39,7 @@ class TickerMapperTest {
     }
 
     @Test
-    fun `toEntity should map FALL change correctly`() {
+    fun `toEntity는 FALL 변화를 올바르게 매핑해야 한다`() {
         val dto = TickerDto(
             market = "KRW-BTC",
             change = "FALL"
@@ -51,7 +51,7 @@ class TickerMapperTest {
     }
 
     @Test
-    fun `toEntity should map EVEN change correctly`() {
+    fun `toEntity는 EVEN 변화를 올바르게 매핑해야 한다`() {
         val dto = TickerDto(
             market = "KRW-BTC",
             change = "EVEN"
@@ -63,7 +63,7 @@ class TickerMapperTest {
     }
 
     @Test
-    fun `toEntities should map list of TickerDto to list of Ticker`() {
+    fun `toEntities는 TickerDto 리스트를 Ticker 리스트로 매핑해야 한다`() {
         val dtos = listOf(
             TickerDto(market = "KRW-BTC"),
             TickerDto(market = "KRW-ETH")
