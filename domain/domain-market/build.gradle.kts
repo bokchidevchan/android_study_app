@@ -17,6 +17,9 @@ kotlin {
 dependencies {
     implementation(project(":core:core-common"))
 
+    // Coroutines
+    implementation(libs.kotlinx.coroutines.core)
+
     // DI
     implementation(libs.javax.inject)
 

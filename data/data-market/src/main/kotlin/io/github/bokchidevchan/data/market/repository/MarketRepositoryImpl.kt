@@ -8,6 +8,9 @@ import io.github.bokchidevchan.domain.market.entity.Market
 import io.github.bokchidevchan.domain.market.entity.Orderbook
 import io.github.bokchidevchan.domain.market.entity.Ticker
 import io.github.bokchidevchan.domain.market.repository.MarketRepository
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class MarketRepositoryImpl @Inject constructor(
@@ -29,6 +32,33 @@ class MarketRepositoryImpl @Inject constructor(
     override suspend fun getOrderbook(marketCodes: List<String>): Result<List<Orderbook>> {
         return safeApiCall {
             upbitApi.getOrderbook(marketCodes.joinToString(",")).toEntities()
+        }
+    }
+
+    override fun observeMarkets(refreshIntervalMs: Long): Flow<Result<List<Market>>> = flow {
+        emit(getMarkets())
+        if (refreshIntervalMs > 0) {
+            while (true) {
+                delay(refreshIntervalMs)
+                emit(getMarkets())
+            }
+        }
+    }
+
+    override fun observeTickers(
+        marketCodes: List<String>,
+        refreshIntervalMs: Long
+    ): Flow<Result<List<Ticker>>> = flow {
+        if (marketCodes.isEmpty()) {
+            emit(Result.success(emptyList()))
+            return@flow
+        }
+        emit(getTicker(marketCodes))
+        if (refreshIntervalMs > 0) {
+            while (true) {
+                delay(refreshIntervalMs)
+                emit(getTicker(marketCodes))
+            }
         }
     }
 }

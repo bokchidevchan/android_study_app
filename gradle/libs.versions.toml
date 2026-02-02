@@ -23,10 +23,12 @@ hiltNavigationCompose = "1.2.0"
 # Navigation
 navigationCompose = "2.8.5"
 
+# Coroutines
+kotlinxCoroutines = "1.9.0"
+
 # Test
 mockk = "1.13.13"
 turbine = "1.2.0"
-kotlinxCoroutinesTest = "1.9.0"
 
 # Coverage
 kover = "0.9.1"
@@ -70,7 +72,8 @@ javax-inject = { group = "javax.inject", name = "javax.inject", version = "1" }
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 mockk-android = { group = "io.mockk", name = "mockk-android", version.ref = "mockk" }
 turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
-kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" }
+kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

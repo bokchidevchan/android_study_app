@@ -10,8 +10,12 @@ import io.github.bokchidevchan.domain.market.entity.Market
 import io.github.bokchidevchan.domain.market.entity.Ticker
 import io.github.bokchidevchan.domain.market.usecase.GetMarketsUseCase
 import io.github.bokchidevchan.domain.market.usecase.GetTickerUseCase
+import io.github.bokchidevchan.domain.market.usecase.MarketWithTickerData
+import io.github.bokchidevchan.domain.market.usecase.ObserveMarketsWithTickerUseCase
 import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.mockk
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -28,6 +32,7 @@ class MarketListViewModelTest {
 
     private lateinit var getMarketsUseCase: GetMarketsUseCase
     private lateinit var getTickerUseCase: GetTickerUseCase
+    private lateinit var observeMarketsWithTickerUseCase: ObserveMarketsWithTickerUseCase
 
     private val testMarkets = listOf(
         Market("KRW-BTC", "Bitcoin", "Bitcoin"),
@@ -57,18 +62,32 @@ class MarketListViewModelTest {
         )
     )
 
+    private val testMarketsWithTicker = testMarkets.map { market ->
+        MarketWithTickerData(
+            market = market,
+            ticker = testTickers.find { it.market == market.code }
+        )
+    }
+
     @Before
     fun setUp() {
         getMarketsUseCase = mockk()
         getTickerUseCase = mockk()
+        observeMarketsWithTickerUseCase = mockk()
     }
+
+    private fun createViewModel() = MarketListViewModel(
+        getMarketsUseCase,
+        getTickerUseCase,
+        observeMarketsWithTickerUseCase
+    )
 
     @Test
     fun `초기 로드 시 마켓과 티커를 가져와야 한다`() = runTest {
         coEvery { getMarketsUseCase(MarketType.KRW) } returns Result.success(testMarkets)
         coEvery { getTickerUseCase(any<List<String>>()) } returns Result.success(testTickers)
 
-        val viewModel = MarketListViewModel(getMarketsUseCase, getTickerUseCase)
+        val viewModel = createViewModel()
 
         viewModel.uiState.test {
             val state = awaitItem()
@@ -83,7 +102,7 @@ class MarketListViewModelTest {
         coEvery { getMarketsUseCase(any()) } returns Result.success(testMarkets)
         coEvery { getTickerUseCase(any<List<String>>()) } returns Result.success(testTickers)
 
-        val viewModel = MarketListViewModel(getMarketsUseCase, getTickerUseCase)
+        val viewModel = createViewModel()
 
         viewModel.uiState.test {
             skipItems(1)
@@ -100,7 +119,7 @@ class MarketListViewModelTest {
         val exception = AppException.NetworkException("Network error")
         coEvery { getMarketsUseCase(any()) } returns Result.error(exception)
 
-        val viewModel = MarketListViewModel(getMarketsUseCase, getTickerUseCase)
+        val viewModel = createViewModel()
 
         viewModel.uiState.test {
             val state = awaitItem()
@@ -118,7 +137,7 @@ class MarketListViewModelTest {
         )
         coEvery { getTickerUseCase(any<List<String>>()) } returns Result.success(testTickers)
 
-        val viewModel = MarketListViewModel(getMarketsUseCase, getTickerUseCase)
+        val viewModel = createViewModel()
 
         viewModel.uiState.test {
             // Initial error state
@@ -142,7 +161,7 @@ class MarketListViewModelTest {
         coEvery { getMarketsUseCase(any()) } returns Result.success(testMarkets)
         coEvery { getTickerUseCase(any<List<String>>()) } returns Result.success(testTickers)
 
-        val viewModel = MarketListViewModel(getMarketsUseCase, getTickerUseCase)
+        val viewModel = createViewModel()
 
         // Wait for initial load to complete
         viewModel.uiState.test {
@@ -166,12 +185,51 @@ class MarketListViewModelTest {
     fun `빈 마켓일 경우 티커를 가져오지 않아야 한다`() = runTest {
         coEvery { getMarketsUseCase(any()) } returns Result.success(emptyList())
 
-        val viewModel = MarketListViewModel(getMarketsUseCase, getTickerUseCase)
+        val viewModel = createViewModel()
 
         viewModel.uiState.test {
             val state = awaitItem()
             assertTrue(state.markets.isEmpty())
             assertNull(state.errorMessage)
+        }
+    }
+
+    @Test
+    fun `enableAutoRefresh 호출 시 Flow로 데이터를 관찰해야 한다`() = runTest {
+        coEvery { getMarketsUseCase(any()) } returns Result.success(testMarkets)
+        coEvery { getTickerUseCase(any<List<String>>()) } returns Result.success(testTickers)
+        every { observeMarketsWithTickerUseCase(any(), any()) } returns flowOf(Result.success(testMarketsWithTicker))
+
+        val viewModel = createViewModel()
+
+        viewModel.uiState.test {
+            awaitItem() // Initial load
+
+            viewModel.enableAutoRefresh(1000L)
+
+            val state = awaitItem()
+            assertEquals(2, state.markets.size)
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `disableAutoRefresh 호출 시 Flow 관찰을 중지해야 한다`() = runTest {
+        coEvery { getMarketsUseCase(any()) } returns Result.success(testMarkets)
+        coEvery { getTickerUseCase(any<List<String>>()) } returns Result.success(testTickers)
+        every { observeMarketsWithTickerUseCase(any(), any()) } returns flowOf(Result.success(testMarketsWithTicker))
+
+        val viewModel = createViewModel()
+
+        viewModel.uiState.test {
+            awaitItem() // Initial load
+
+            viewModel.enableAutoRefresh(1000L)
+            awaitItem()
+
+            viewModel.disableAutoRefresh()
+            // No crash means success
+            cancelAndIgnoreRemainingEvents()
         }
     }
 }
